@@ -14,7 +14,7 @@ namespace AzureRestAPI.ManagementAPI.Entities
         public object type { get; set; }
     }
 
-    class ServiceDetail
+    public class ServiceDetail
     {
         public string PartNumber { get; set; }
         public string Service { get; set; }
