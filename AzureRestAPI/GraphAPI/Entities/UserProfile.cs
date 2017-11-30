@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using TTOAuthManager.Azure.Entities;
+using Open.OAuthManager.Azure.Entities;
 
 namespace AzureRestAPI.GraphAPI.Entities
 {

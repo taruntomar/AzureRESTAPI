@@ -1,17 +1,14 @@
 ﻿using AzureRestAPI.GraphAPI.Entities;
-using TTOAuthManager.Azure;
 
 namespace AzureRestAPI.GraphAPI
 {
     public class AzureGraphAPI:AzureRestAPI
     {
-        #region private fields
-        string baseurl = "https://graph.microsoft.com/v1.0";
-        #endregion
-
-        public AzureGraphAPI(AzureADE2EManager azureADE2EManager):base(azureADE2EManager)
+        public AzureGraphAPI():base()
         {
-            
+            BaseURL = "https://graph.microsoft.com/v1.0";
+            Authenticator.Config.Resource = @"https://graph.windows.net/";
+            Authenticator.Config.Authority = @"https://graph.windows.net/";
         }
 
      

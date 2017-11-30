@@ -1,75 +1,65 @@
 ﻿using AzureRestAPI.ManagementAPI.Entities;
 using AzureRestAPI.ManagementAPI.Entities.Subscription;
 using AzureRestAPI.ManagementAPI.Entities.VirtualMachine;
-using RestSharp;
-using System.Collections.Generic;
 using System.Linq;
-using TTOAuthManager.Azure;
 
 namespace AzureRestAPI.ManagementAPI
 {
-    public class AzureManagementAPI:AzureRestAPI
+    public partial class AzureManagementAPI:AzureRestAPI
     {
         #region private fields
-        string baseurl = "https://graph.microsoft.com/v1.0";
-        private RESTManager _azureManager;
         #endregion
-        public AzureManagementAPI(AzureADE2EManager azureADE2EManager) :base(azureADE2EManager)
+        public AzureManagementAPI()
         {
-            _azureManager = new RESTManager(AzureAPIs.ManagementAPI);
+            BaseURL = "https://management.azure.com/";
+            Authenticator.Config.Resource = @"https://management.azure.com/";
+            Authenticator.Config.Authority = @"https://management.core.windows.net/";
+        }
+        
+
+        public RestResponse<BasicResourceInfo[],Error>  ListResources(string subscriptionId, string resourceGroupName, Product[] products)
+        {
+            string endpoint = @"subscriptions/" + subscriptionId + @"/resourceGroups/" + resourceGroupName + @"/resources";
+            var response = RestRequest<BasicResourceInfo[], Error>(endpoint, "");
+            return response;
+
+            //List<object> services = new List<object>();
+            //Service[] servicesz = Parse<Service[]>(response);
+            //if (servicesz == null)
+            //    return null;
+
+            //return servicesz.Select(x => AbstractServiceDetail(x, products)).ToArray();
+
         }
 
-        public BasicResourceInfo[]  ListResources(string subscriptionId, string resourceGroupName, Product[] products)
+        public RestResponse<Subscription[],Error> Subscriptions()
         {
-            string resource = @"subscriptions/" + subscriptionId + @"/resourceGroups/" + resourceGroupName + @"/resources";
-            IRestResponse response = _azureManager.AzureRESTRequest(resource, Method.GET);
-            List<object> services = new List<object>();
-            Service[] servicesz = _azureManager.Parse<Service[]>(response);
-            if (servicesz == null)
-                return null;
-
-            return servicesz.Select(x => AbstractServiceDetail(x, products)).ToArray();
-
+            string endpoint = @"subscriptions/";
+            var response = RestRequest< Subscription[],Error>(endpoint,"");
+            return response;
         }
 
-        public Subscription[] GetSubscriptions()
+        public RestResponse<VirtualMachine,Error> GetProductDetail(string subscriptionId, string resourceGroupName, string provider, string serviceType, string serviceName)
         {
-            string resource = @"subscriptions/";
-            IRestResponse response = _azureManager.AzureRESTRequest(resource, Method.GET);
-            Subscription[] subs = _azureManager.Parse<Subscription[]>(response);
-            //var subs = subscriptions.Select(x => new { id = x.subscriptionId, name = x.displayName, img = "/Content/images/azure_products/subscriptions.svg" });
-
-            return subs;
+            var endpoint = "subscriptions/" + subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/" + provider + "/" + serviceType + "/" + serviceName;
+            var response = RestRequest<VirtualMachine, Error>(endpoint,"");
+            return response;
         }
 
-        public dynamic GetProductDetail(string subscriptionId, string resourceGroupName, string provider, string serviceType, string serviceName)
-        {
-            var resource = "subscriptions/" + subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/" + provider + "/" + serviceType + "/" + serviceName;
-            IRestResponse response = _azureManager.AzureRESTRequest(resource, Method.GET);
-
-            VirtualMachine vm = VirtualMachine.FromJson(response.Content);
-
-            return vm;
-        }
-
-        public dynamic GetProductDetail(string subscriptionId, string resourceGroupName, string provider, string serviceType, string serviceName, string extraParameter)
+        public RestResponse<VirtualMachineInstanceInfo,Error> GetProductDetail(string subscriptionId, string resourceGroupName, string provider, string serviceType, string serviceName, string extraParameter)
         {
             var resource = "subscriptions/" + subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/" + provider + "/" + serviceType + "/" + serviceName + "/" + extraParameter;
-            IRestResponse response = _azureManager.AzureRESTRequest(resource, Method.GET);
-
-            VirtualMachineInstanceInfo vm = VirtualMachineInstanceInfo.FromJson(response.Content);
-
-            return vm;
+            var response = RestRequest< VirtualMachineInstanceInfo, Error>(resource, "");
+            return response;
         }
 
-        public dynamic GetMetricDefinitions(string subscriptionId, string resourceGroupName, string provider, string serviceType, string serviceName, string extraParameter)
+        public RestResponse<MetricDefinitions,Error> GetMetricDefinitions(string subscriptionId, string resourceGroupName, string provider, string serviceType, string serviceName, string extraParameter)
         {
             var resource = "subscriptions/" + subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/" + provider + "/" + serviceType + "/" + serviceName + "/" + extraParameter;
-            IRestResponse response = _azureManager.AzureRESTRequest(resource, Method.GET);
+            var response = RestRequest<MetricDefinitions, Error>(resource,"");
+            return response;
 
-            MetricDefinitions md = MetricDefinitions.FromJson(response.Content);
-
-            return md.Value.Select(x => new { id = x.Id, name = x.Name.Value, unit = x.Unit, selected = false });
+            //return md.Value.Select(x => new { id = x.Id, name = x.Name.Value, unit = x.Unit, selected = false });
         }
 
         private BasicResourceInfo AbstractServiceDetail(Service service, Product[] products)
@@ -95,38 +85,24 @@ namespace AzureRestAPI.ManagementAPI
 
         }
 
-
-
-        public ResourceGroup[] GetResourceGroups(string subscriptionId)
+        public RestResponse<ResourceGroup[],Error> GetResourceGroups(string subscriptionId)
         {
             string resource = @"subscriptions/" + subscriptionId + @"/resourceGroups/";
-
-            IRestResponse response = _azureManager.AzureRESTRequest(resource, Method.GET);
-            ResourceGroup[] resourceGroups = _azureManager.Parse<ResourceGroup[]>(response);
-            return resourceGroups;
+            var response = RestRequest<ResourceGroup[], Error>(resource,"");
+            return response;
             //return resourceGroups.Select(x => new { id=x.id,name=x.name, img = "/Content/images/azure_products/resourcegroup.svg" });
 
         }
 
-        public dynamic GetMetrics(string subscriptionId, string resourceGroupName, string provider, string serviceType, string serviceName, string extraParameter, bool addApiVersion)
+        public RestResponse<Metric,Error> GetMetrics(string subscriptionId, string resourceGroupName, string provider, string serviceType, string serviceName, string extraParameter)
         {
-            var resource = "subscriptions/" + subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/" + provider + "/" + serviceType + "/" + serviceName + "/" + extraParameter;
-            IRestResponse response = _azureManager.AzureRESTRequest(resource, Method.GET, "", addApiVersion);
+            var endPoint = "subscriptions/" + subscriptionId + "/resourceGroups/" + resourceGroupName + "/providers/" + provider + "/" + serviceType + "/" + serviceName + "/" + extraParameter;
+            var response = RestRequest<Metric, Error>(endPoint, "");
+            return response;
 
-            Metric md = Metric.FromJson(response.Content);
+            //Metric md = Metric.FromJson(response.Content);
 
-            return md.Value.First().Timeseries.First().Data;
-        }
-
-        public class BasicResourceInfo
-        {
-            public string id { get; set; }
-            public string name { get; set; }
-            public string img { get; set; }
-            public string label { get; set; }
-            public string appName { get; set; }
-            public string route { get; set; }
-
+            //return md.Value.First().Timeseries.First().Data;
         }
     }
 }
