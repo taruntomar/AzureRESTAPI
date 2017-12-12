@@ -1,4 +1,7 @@
-﻿using System;
+﻿using AzureRestAPI.GraphAPI;
+using AzureRestAPI.ManagementAPI;
+using Open.OAuthManager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +13,8 @@ namespace SampleTest
     {
         static void Main(string[] args)
         {
+       
+
         }
     }
 }

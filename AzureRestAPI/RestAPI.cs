@@ -94,7 +94,15 @@ namespace AzureRestAPI
             RestClient client = new RestClient(url);
             RestRequest request = new RestRequest(Method.GET);
             Authenticator.Config.Scope = scope;
-            var access_token = AuthenticationMode==GrantType.UserCredential? Authenticator.GetAccessToken_UserCredential(DBDealer):Authenticator.GetAccessToken_FromClientCredential();
+            AzureADAuthRestResponse<AccessTokenClass, OAuthError> access_token;
+            if (AuthenticationMode == GrantType.UserCredential)
+            {
+                access_token = Authenticator.GetAccessToken_UserCredential(DBDealer);
+            }
+            else
+            {
+                access_token = Authenticator.GetAccessToken_FromClientCredential();
+            }
             if (access_token.OAuthError == OAuthErrors.None)
             {
                 string token = access_token.Result.AccessToken;
