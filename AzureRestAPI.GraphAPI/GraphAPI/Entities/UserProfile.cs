@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Open.OAuthManager.Azure.Entities;
 
-namespace AzureRestAPI.GraphAPI.Entities
+namespace Open.AzureRestAPI.GraphAPI.Entities
 {
     public partial class UserProfile
     {

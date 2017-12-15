@@ -1,8 +1,10 @@
 ﻿using AzureRestAPI.GraphAPI.Entities;
+using Open.AzureRestAPI.Core;
+using Open.AzureRestAPI.GraphAPI.Entities;
 
-namespace AzureRestAPI.GraphAPI
+namespace Open.AzureRestAPI.GraphAPI
 {
-    public class AzureGraphAPI:AzureRestAPI
+    public class AzureGraphAPI:Core.AzureRestAPI
     {
         public AzureGraphAPI():base()
         {

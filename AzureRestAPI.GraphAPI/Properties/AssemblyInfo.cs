@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SampleTest")]
+[assembly: AssemblyTitle("AzureRestAPI.GraphAPI")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("SampleTest")]
+[assembly: AssemblyProduct("AzureRestAPI.GraphAPI")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ecdf607f-1aba-4b13-9c83-7335b7f0ddc0")]
+[assembly: Guid("a58eef28-4778-4eb5-b3a3-2a0d19797762")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -1,4 +1,4 @@
-﻿namespace AzureRestAPI.GraphAPI
+﻿namespace Open.AzureRestAPI.GraphAPI.Entities
 {
     public class UserProfileError
     {
